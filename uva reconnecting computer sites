@@ -1,0 +1,135 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int Max = 10000002;
+pair<long long,pair<int,int> >p[Max];
+pair<long long,pair<int,int> >k[Max];
+int parent[1000003],r[1000003];
+void built(int node)
+{
+    for(int i=1; i<=node; i++)
+    {
+        parent[i]=i;
+        r[i]=0;
+    }
+}
+int make_friend(int n)
+{
+    if(parent[n]==n)
+        return n;
+    else
+        return parent[n]=make_friend(parent[n]);
+}
+void make_union(int a,int b)
+{
+    if(r[a]>r[b])
+    {
+        parent[b]=a;
+    }
+    else
+    {
+        parent[a]=b;
+        if(r[a]==r[b])
+            r[b]++;
+    }
+}
+long long kruskal(pair <long long,pair <int,int> >p[],int edge)
+{
+    int minimumcost=0;
+    int x,y,cost;
+    for(int i=0; i<edge; i++)
+    {
+        x=p[i].second.first;
+        y=p[i].second.second;
+        cost=p[i].first;
+        int pa=make_friend(x);
+        int pb=make_friend(y);
+        if(pa!=pb)
+        {
+            minimumcost+=cost;
+            make_union(pa,pb);
+        }
+    }
+    return minimumcost;
+}
+long long kruskal2(pair <long long,pair <int,int> >k[],int edge)
+{
+    int minimumcost1=0;
+    int x,y,cost;
+    for(int i=0; i<edge; i++)
+    {
+        x=k[i].second.first;
+        y=k[i].second.second;
+        cost=k[i].first;
+        int pa=make_friend(x);
+        int pb=make_friend(y);
+        if(pa!=pb)
+        {
+            minimumcost1+=cost;
+            make_union(pa,pb);
+        }
+    }
+    return minimumcost1;
+}
+int main()
+{
+    int n,s,a,b,cost,minimumcost=0,minimumcost1;
+    int T=0;
+    while(scanf("%d",&n)==1)
+    {
+        if(T!=0)
+            cout<<endl;
+        built(n);
+        for(int i=0; i<n-1; i++)
+        {
+            cin>>a>>b>>cost;
+            p[i]=make_pair(cost,make_pair(a,b));
+
+        }
+        sort(p,p+(n-1));
+        minimumcost=kruskal(p,n);
+        cout<<minimumcost<<endl;
+        for(int i=0; i<n-1; i++)
+        {
+            k[i]=p[i];
+        }
+        int s,y;
+        cin>>s;
+        for(int j=1; j<=s; j++)
+        {
+            cin>>a>>b>>cost;
+            k[n-2+j]=make_pair(cost,make_pair(a,b));
+        }
+        memset(parent,0,sizeof parent);
+        memset(r,0,sizeof r);
+        built(n);
+        sort(k,k+(n-1)+s);
+        minimumcost1=kruskal2(k,n-1+s);
+        if(minimumcost1<minimumcost)
+            cout<<minimumcost1<<endl;
+        minimumcost1=0;
+        memset(k,0,sizeof k);
+        cin>>y;
+        memset(parent,0,sizeof parent);
+        memset(r,0,sizeof r);
+        built(n);
+        for(int i=0; i<n-1; i++)
+        {
+            k[i]=p[i];
+        }
+        for(int j=1; j<=y; j++)
+        {
+            cin>>a>>b>>cost;
+            k[n-2+j]=make_pair(cost,make_pair(a,b));
+        }
+        sort(k,k+(n-1)+y);
+        minimumcost1=kruskal2(k,n-1+y);
+        if(minimumcost1<minimumcost)
+            cout<<minimumcost1<<endl;
+        memset(k,0,sizeof k);
+        minimumcost1=0;
+        T++;
+    }
+    return 0;
+}
+
+
