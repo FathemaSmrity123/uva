@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    long long int n,p,q;
+    while(cin>>n)
+    {
+        int k=0;
+        for(int i=1;i<=8;i++)
+        {
+            p=pow(18,i)+1;
+            q=pow(18,i)*9;
+            if(n>=p && n<=q)
+            {
+                k=0;
+                break;
+            }
+
+            else if(n<p)
+            {
+                k=1;
+                break;
+            }
+        }
+
+        if(k==0 || (n>=2 && n<=9))
+            cout<<"Stan wins."<<endl;
+        else if(k==1 || (n>=10 && n<=18)||(n>=0 && n<=1))
+            cout<<"Ollie wins."<<endl;
+    }
+}
